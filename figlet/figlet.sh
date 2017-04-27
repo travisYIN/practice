@@ -306,6 +306,6 @@ good_fonts=(
 for((i=0;i<${#good_fonts[*]};i++))
 do
 	touch "${fonts[${good_fonts[i]}]}.txt"
-	echo figlet -f ${fonts[${good_fonts[i]}]} ${1} ${2}
-	figlet -f "${fonts[${good_fonts[i]}]}" ${1} ${2} > "${fonts[${good_fonts[i]}]}.txt"
+	echo Creating ${fonts[${good_fonts[i]}]}.txt ...
+	figlet -f "${fonts[${good_fonts[i]}]}" ${1} ${2} ${3} ${4} > "${fonts[${good_fonts[i]}]}.txt"
 done
