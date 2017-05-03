@@ -1,6 +1,6 @@
 # FIGlet
 
-FIGlet是一个生成由各种各样小型ASCII字符组成的字符画的电脑程序。更详细的解释清参见[维基百科](https://en.wikipedia.org/wiki/FIGlet)。
+FIGlet是一个生成由各种各样小型ASCII字符组成的字符画的电脑程序。更详细的解释请参见[维基百科](https://en.wikipedia.org/wiki/FIGlet)。
 
 ## Install
 
@@ -29,7 +29,7 @@ Options:
   --vertical-layout    A string value that indicates the vertical layout to use
 ```
 
-可以用`figlet -f`指定字体打印，但是一共快300个字体，很难一一尝试。
+可以用`figlet -f`指定字体打印，但是一共300多种字体，很难一一尝试。
 
 于是我挑选了几个字体，可以通过下面这个命令快速生成效果图。
 
