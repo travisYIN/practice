@@ -1,6 +1,6 @@
 # practice
 
-For my practice projects about FE skills.
+For my practice projects about FE skills. :)
 
 * figlet
 	* figlet.sh
