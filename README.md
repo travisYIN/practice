@@ -6,8 +6,8 @@ For my practice projects about FE skills. :)
   * config.js
   * getnav.js **( ignore it for safety reason )**
   * output.html
-  * README.md
 * figlet
-	* figlet.sh
-	* README.md
+  * figlet.sh
+* snake
+  * snake.html
 * README.md
