@@ -45,10 +45,13 @@
         };
 
         function startGame() {
-            snake.unshift(n = snake[0] + direction);
-            if(snake.indexOf(n, 1) > 0 || n < 0 || n > NUM * NUM - 1 || direction == 1 && n % NUM == 0 || direction == -1 && n % NUM == NUM - 1) {
+            n = snake[0] + direction
+            if(snake.indexOf(n) > 0 || n < 0 || n > NUM * NUM - 1 || direction == 1 && n % NUM == 0 || direction == -1 && n % NUM == NUM - 1) {
+                // pause = setTimeout(arguments.callee, 150);
+                // return
                 return alert("GAME OVER!");
             }
+            snake.unshift(n);
             draw(n, "lime");
             draw(snake[1], "#00bb00");
             draw(snake[2], "green");
