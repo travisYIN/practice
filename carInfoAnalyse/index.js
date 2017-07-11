@@ -71,10 +71,6 @@ function getDataArrs (strToAnalyse, splitStrs, wantedParts) {
 	return result
 }
 
-var blocks1 = getDataArrs(input1, splits, parts)
-getDataArrs(input2, splits, parts)
-getDataArrs(input3, splits, parts)
-
 function formatStr (str) {
 	return str.replace(/[{}]/g, '').split('|')
 }
@@ -88,8 +84,8 @@ function mapKeyValue (arr) {
 			return
 		}
 
-		keyVal = el.split(' = ')
-		result[keyVal[0]] = keyVal[1]
+		keyVal = el.split('=')
+		result[keyVal[0].trim()] = keyVal[1].trim()
 	})
 
 	return result
@@ -97,61 +93,72 @@ function mapKeyValue (arr) {
 
 function infoBlockToJSON (arr) {
 	var result = {},
-		keyVal = []
+			formatedArr = {}
 
-	arr.forEach((el, i) => arr[i] = formatStr(el))
+	arr.forEach((el, i) => {
+		if (formatStr(el)[0] == 'Wikipedia') {
+			formatedArr.name = formatStr(el)
+		} else if (formatStr(el)[0] == 'Infobox/car') {
+			formatedArr.info = formatStr(el)
+		}
+	})
 
-	result = mapKeyValue(arr[1])
+	result = mapKeyValue(formatedArr.info)
+	result.name = formatedArr.name[1] ? formatedArr.name[1] : result['Manufacturer Logo'] + ' ' + result['Model Name']
 
 	return result
 }
 
 function charBlockToJSON (arr) {
-	var result = {},
-		keyVal = []
-
-	arr = formatStr(arr[0])
-
-	// console.log(arr)
-	// arr[1].forEach((el, i) => {
-	// 	if (i == 0) {
-	// 		return
-	// 	}
-
-	// 	keyVal = el.split(' = ')
-	// 	result[keyVal[0]] = keyVal[1]
-	// })
-
-	return result
+	return mapKeyValue(formatStr(arr[0]))
 }
 
 function upgrBlockToJSON (arr) {
 	var result = {},
-		keyVal = []
+			formatedArr = []
 
-	// arr.forEach((el, i) => arr[i] = formatStr(el))
+	arr.forEach((el, i) => {
+		formatedArr = formatStr(el)
 
-	// arr[1].forEach((el, i) => {
-	// 	if (i == 0) {
-	// 		return
-	// 	}
+		if (i == 0) {
+			return
+		}
 
-	// 	keyVal = el.split(' = ')
-	// 	result[keyVal[0]] = keyVal[1]
-	// })
+		if (!formatedArr[2]) {
+			result['total'] = formatedArr[1]
+			return
+		}
+
+		if (!result[formatedArr[2]]) {
+			result[formatedArr[2]] = []
+		}
+
+		result[formatedArr[2]].push({
+			name: formatedArr[3],
+			duration: formatedArr[4],
+			rs: formatedArr[5],
+			coin: formatedArr[6]
+		})
+
+	})
 
 	return result
 }
 
 function blocksToJSON (arr) {
-	// info part
 	var result = {}
 
 	result.info = infoBlockToJSON(arr.info)
 	result.char = charBlockToJSON(arr.char)
 	result.upgr = upgrBlockToJSON(arr.upgr)
-	console.log(result)
-	
+
+	return result
 }
 
-blocksToJSON(blocks1)
+var blocks1 = getDataArrs(input1, splits, parts),
+		blocks2 = getDataArrs(input2, splits, parts),
+		blocks3 = getDataArrs(input3, splits, parts)
+
+console.log(blocks3, blocksToJSON(blocks3))
+
+while(1) {}
