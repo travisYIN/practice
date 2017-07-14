@@ -18,7 +18,7 @@ function fetchUrl(url, callback, cb) {
 }
 
 fs.readFile('carlist.txt', 'utf8', (error, data) => {
-  carUrlList = data.split('\n').slice(0,30)
+  carUrlList = data.split('\n').slice(0,10)
 
   console.log(carUrlList)
   

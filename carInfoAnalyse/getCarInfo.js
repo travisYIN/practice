@@ -161,6 +161,7 @@ fs.readFile('cardescs.txt', 'utf8', (error, data) => {
   console.log(carDescList)
 
   carDescList.forEach(e => {
+    // console.log(blocksToJSON(getDataArrs(e, splits, parts)))
     carInfoList.push(blocksToJSON(getDataArrs(e, splits, parts)))
   })
 
