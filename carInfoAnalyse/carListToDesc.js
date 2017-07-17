@@ -3,7 +3,6 @@ var fs = require('fs'),
     request = require('request'),
     cheerio = require("cheerio"),
     carUrlList = [],
-    carDescList = [],
     readStream = fs.createReadStream('datafile/carlist.txt'),
     writeStream = fs.createWriteStream('datafile/cardesc.txt')
 
@@ -37,7 +36,6 @@ readStream.on('data', data => {
         console.log(err)
       })
   }, () => {
-    // writeStream.write(carDescList.join('\n'))
     console.log('\nSUCCESS!')
   })
 })

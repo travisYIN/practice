@@ -1,6 +1,5 @@
 var fs = require('fs'),
     carDescList = [],
-    carInfoList = [],
     splits = [
       'Availability',
       'Characteristics',
