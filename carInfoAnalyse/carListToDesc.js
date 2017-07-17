@@ -22,19 +22,24 @@ readStream.on('data', data => {
   carUrlList = data.toString().split('\n').slice(0,Number.isNaN(process.argv[2]) ? -1 : process.argv[2])
 
   async.mapLimit(carUrlList, 5, (url, callback) => {
-    console.log('#### REQUEST: ' + url + ' ####')
+    if (url) {
+      console.log('#### REQUEST: ' + url + ' ####')
 
-    fetchUrl(url)
-      .then(data => {
-        var $ = cheerio.load(data)
+      fetchUrl(url)
+        .then(data => {
+          var $ = cheerio.load(data)
 
-        writeStream.write($('#wpTextbox1').text().split('\n').join('') + 'END\n')
+          writeStream.write($('#wpTextbox1').text().split('\n').join('') + 'END\n')
 
-        callback()
-      })
-      .catch(err => {
-        console.log(err)
-      })
+          callback()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    } else {
+      callback()
+    }
+
   }, () => {
     console.log('\nSUCCESS!')
   })
