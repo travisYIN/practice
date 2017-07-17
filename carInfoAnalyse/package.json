@@ -1,0 +1,22 @@
+{
+  "name": "car-info-analyse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "getCarList.js",
+  "dependencies": {
+    "async": "^2.5.0",
+    "cheerio": "^1.0.0-rc.2",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "full": "node getCarList.js; node carListToDesc.js; node carDescToInfo.js;",
+    "list": "node getCarList.js",
+    "debug": "node carListToDesc.js; node carDescToInfo.js",
+    "desc": "node carListToDesc.js",
+    "info": "node carDescToInfo.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

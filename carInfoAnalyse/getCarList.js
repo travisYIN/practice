@@ -1,31 +1,36 @@
-var request = require('request'),
-    fs = require('fs'),
+var fs = require('fs'),
+    request = require('request'),
     cheerio = require("cheerio"),
-    carUrlList = []
+    carUrlList = [],
+    writeStream = fs.createWriteStream('datafile/carlist.txt')
 
-function fetchUrl(url, callback) {
-  request(url, (error, response, body) => {
-    if (!error && response.statusCode == 200) {
-      callback && callback(body)
-    } else {
-      console.log('Fail to fetch url: ' + url)
-      console.log('ERROR: ', error)
-    }
+var fetchUrl = url => {
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        resolve(body)
+      } else {
+        reject(error)
+      }
+    })
   })
 }
 
-fetchUrl('http://rr3.wikia.com/wiki/Cars', data => {
-  var $ = cheerio.load(data)
-  
-  $('#mw-content-text tr td:nth-child(3) a').each((i, e) => {
-    carUrlList.push('http://rr3.wikia.com' + $(e).attr('href') + '?action=edit')
-  })
+console.log('\nStart request for car list...')
 
-  fs.writeFile('carlist.txt', carUrlList.join('\n'), error => {
-    if (error) {
-      console.log('ERROR: ', error);
-    } else {
-      console.log('\nSUCCESS: Write car url list info into carlist.txt.');
-    }
-  });
-})
+fetchUrl('http://rr3.wikia.com/wiki/Cars')
+  .then(data => {
+    var $ = cheerio.load(data)
+    
+    $('#mw-content-text tr td:nth-child(3) a').each((i, e) => {
+      carUrlList.push('http://rr3.wikia.com' + $(e).attr('href') + '?action=edit')
+    })
+
+    writeStream.write(carUrlList.join('\n'))
+
+    console.log('SUCCESS!')
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  
