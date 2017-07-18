@@ -10,12 +10,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "full": "node getCarList.js; node carListToDesc.js; node carDescToInfo.js;",
+    "full": "node getCarList.js; node carListToInfo.js;",
     "list": "node getCarList.js",
-    "debug": "node carListToDesc.js; node carDescToInfo.js",
-    "desc": "node carListToDesc.js",
-    "info": "node carDescToInfo.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "info": "node carListToInfo.js;"
   },
   "author": "",
   "license": "ISC"

@@ -1,5 +1,9 @@
 var fs = require('fs'),
-    carDescList = [],
+    async = require('async'),
+    request = require('request'),
+    cheerio = require("cheerio"),
+    carUrlList = [],
+    carDesc = '',
     splits = [
       'Availability',
       'Characteristics',
@@ -16,10 +20,21 @@ var fs = require('fs'),
       name: 'upgr',
       index: 3
     }],
-    readStream = fs.createReadStream('datafile/cardesc.txt'),
+    readStream = fs.createReadStream('datafile/carlist.txt'),
     writeStream = fs.createWriteStream('datafile/carinfo.txt')
 
-// console.log('\n############################\n############################\n######## START HERE ########\n############################\n############################\n')
+var fetchUrl = url => {
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        resolve(body)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
+
 
 function getWrappedData (str) {
   var i,
@@ -174,20 +189,31 @@ function blocksToJSON (arr) {
 }
 
 readStream.on('data', data => {
-  carDescList = (carDescList.length ? carDescList[carDescList.length - 1] + data.toString() : data.toString()).split('\n')
+  carUrlList = data.toString().split('\n').slice(0,Number.isNaN(process.argv[2]) ? -1 : process.argv[2])
 
-  readStream.pause()
-  carDescList.forEach((e, i) => {
-    console.log('Analysing record: ' + (i + 1))
-    if (!e.endsWith('END')) {
-      return
+  async.mapLimit(carUrlList, 5, (url, callback) => {
+    if (url) {
+      console.log('#### REQUEST: ' + url + ' ####')
+
+      fetchUrl(url)
+        .then(data => {
+          var $ = cheerio.load(data)
+
+          carDesc = $('#wpTextbox1').text().split('\n').join('')
+
+          console.log('Analysing record: ' + url)
+          writeStream.write(JSON.stringify(blocksToJSON(getDataPart(carDesc, splits, parts))) + '\n')
+
+          callback()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    } else {
+      callback()
     }
 
-    writeStream.write(JSON.stringify(blocksToJSON(getDataPart(e, splits, parts))) + '\n')
+  }, () => {
+    console.log('\nSUCCESS!')
   })
-  readStream.resume()
-})
-
-readStream.on('end', data => {
-  console.log('\nSUCCESS!')
 })

@@ -30,4 +30,3 @@ fetchUrl('http://rr3.wikia.com/wiki/Cars')
   .catch(err => {
     console.log(err)
   })
-  
