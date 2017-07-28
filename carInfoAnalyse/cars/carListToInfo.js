@@ -1,6 +1,5 @@
 var fs = require('fs'),
     async = require('async'),
-    request = require('request'),
     cheerio = require("cheerio"),
     carUrlList = [],
     carDesc = '',
@@ -20,45 +19,9 @@ var fs = require('fs'),
       name: 'upgr',
       index: 3
     }],
-    readStream = fs.createReadStream('datafile/carlist.txt'),
-    writeStream = fs.createWriteStream('datafile/carinfo.txt')
-
-var fetchUrl = url => {
-  return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
-      if (!error && response.statusCode == 200) {
-        resolve(body)
-      } else {
-        reject(error)
-      }
-    })
-  })
-}
-
-
-function getWrappedData (str) {
-  var i,
-      num = 0,
-      text = '',
-      result = []
-
-  // loop str, get data wrapped by {{}}
-  for (i of str) {
-    i == '{' && num++
-    i == '}' && num--
-
-    if (num != 0) {
-      text += i
-    }
-    if (num == 0 && i == '}') {
-      text += i
-      result.push(text)
-      text = ''
-    }
-  }
-
-  return result
-}
+    readStream = fs.createReadStream('../datafile/source/carurl.txt'),
+    writeStream = fs.createWriteStream('../datafile/result/cars.txt'),
+    util = require('../util/util')
 
 function getDataPart (str, splits, parts) {
   var result = [],
@@ -75,29 +38,7 @@ function getDataPart (str, splits, parts) {
 
   // put wanted part into result
   parts.forEach(part => {
-    result[part.name] = getWrappedData(splitedStrArr[part.index])
-  })
-
-  return result
-}
-
-function strToArr (str) {
-  // remove {} from str and split str by '|'
-  return str.replace(/[{}]/g, '').split('|')
-}
-
-function mapKeyValue (arr) {
-  var result = {},
-    keyVal = []
-
-  // map key=value str to {key: value}
-  arr.forEach((el, i) => {
-    if (i == 0) {
-      return
-    }
-
-    keyVal = el.split('=')
-    result[keyVal[0].trim()] = keyVal[1].trim()
+    result[part.name] = util.getWrappedData(splitedStrArr[part.index])
   })
 
   return result
@@ -115,15 +56,15 @@ function infoBlockToJSON (arr) {
   // {{Infobox/car|Manufacturer Logo = Aston Martin|Model Name = DB9}}
   // => { 'Manufacturer Logo': 'Aston Martin', 'Model Name': 'DB9' }
   arr.forEach((el, i) => {
-    if (strToArr(el)[0] == 'Wikipedia') {
-      formatedArr.name = strToArr(el)
-    } else if (strToArr(el)[0].trim() == 'Infobox/car') {
-      formatedArr.info = strToArr(el)
+    if (util.strToArr(el)[0] == 'Wikipedia') {
+      formatedArr.name = util.strToArr(el)
+    } else if (util.strToArr(el)[0].trim() == 'Infobox/car') {
+      formatedArr.info = util.strToArr(el)
     }
   })
 
 
-  result = mapKeyValue(formatedArr.info)
+  result = util.mapKeyValue(formatedArr.info)
   // if wikipedia part no exist, get name from Infobox/car
   // eg:
   // {{Infobox/car|Manufacturer Logo = Aston Martin|Model Name = DB9}}
@@ -138,7 +79,7 @@ function charBlockToJSON (arr) {
   // eg:
   // {{T/stats|PR Initial = 33.6|TPSMPH = 183|TPSKMH = 294}}
   // => { 'PR Initial': 33.6, 'TPSMPH': 183, 'TPSKMH': 294 }
-  return arr[0] ? mapKeyValue(strToArr(arr[0])) : {}
+  return arr[0] ? util.mapKeyValue(util.strToArr(arr[0])) : {}
 }
 
 function upgrBlockToJSON (arr) {
@@ -151,7 +92,7 @@ function upgrBlockToJSON (arr) {
   //                  ||                   ||                 ||       ||  ||
   //            classification            name             duration    rs coin
   arr.forEach((el, i) => {
-    formatedArr = strToArr(el)
+    formatedArr = util.strToArr(el)
 
     if (i == 0) {
       return
@@ -195,7 +136,7 @@ readStream.on('data', data => {
     if (url) {
       console.log('#### REQUEST: ' + url + ' ####')
 
-      fetchUrl(url)
+      util.fetchUrl(url)
         .then(data => {
           var $ = cheerio.load(data)
 
@@ -212,7 +153,6 @@ readStream.on('data', data => {
     } else {
       callback()
     }
-
   }, () => {
     console.log('\nSUCCESS!')
   })

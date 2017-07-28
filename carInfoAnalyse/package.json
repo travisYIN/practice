@@ -6,13 +6,15 @@
   "dependencies": {
     "async": "^2.5.0",
     "cheerio": "^1.0.0-rc.2",
+    "mongodb": "^2.2.30",
+    "mongoose": "^4.11.4",
     "request": "^2.81.0"
   },
   "devDependencies": {},
   "scripts": {
-    "full": "node getCarList.js; node carListToInfo.js;",
-    "list": "node getCarList.js",
-    "info": "node carListToInfo.js;"
+    "car": "cd cars; node getCarList.js; node carListToInfo.js; cd ..;",
+    "car-g": "cd cars; node getCarList.js; cd ..;",
+    "car-a": "cd cars; node carListToInfo.js; cd ..;"
   },
   "author": "",
   "license": "ISC"
