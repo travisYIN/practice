@@ -12,6 +12,27 @@ function fetchUrl (url) {
   })
 }
 
+function getDataPart (str, splits, parts) {
+  var result = [],
+      splitedStrArr = []
+
+  // split str into several parts
+  splits.forEach(split => {
+    var splitedStr = str.split(split)
+    splitedStr.length > 1 && splitedStrArr.push(splitedStr[0])
+    str = splitedStr[splitedStr.length - 1]
+  })
+
+  splitedStrArr.push(str)
+
+  // put wanted part into result
+  parts.forEach(part => {
+    result[part.name] = getWrappedData(splitedStrArr[part.index])
+  })
+
+  return result
+}
+
 function getWrappedData (str) {
   var i,
       num = 0,
@@ -59,6 +80,7 @@ function mapKeyValue (arr) {
 }
 
 exports.fetchUrl = fetchUrl
+exports.getDataPart = getDataPart
 exports.getWrappedData = getWrappedData
 exports.strToArr = strToArr
 exports.mapKeyValue = mapKeyValue

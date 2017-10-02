@@ -23,27 +23,6 @@ var fs = require('fs'),
     writeStream = fs.createWriteStream('../datafile/result/cars.txt'),
     util = require('../util/util')
 
-function getDataPart (str, splits, parts) {
-  var result = [],
-      splitedStrArr = []
-
-  // split str into several parts
-  splits.forEach(split => {
-    var splitedStr = str.split(split)
-    splitedStr.length > 1 && splitedStrArr.push(splitedStr[0])
-    str = splitedStr[splitedStr.length - 1]
-  })
-
-  splitedStrArr.push(str)
-
-  // put wanted part into result
-  parts.forEach(part => {
-    result[part.name] = util.getWrappedData(splitedStrArr[part.index])
-  })
-
-  return result
-}
-
 function infoBlockToJSON (arr) {
   var result = {},
       formatedArr = {}
@@ -143,7 +122,7 @@ readStream.on('data', data => {
           carDesc = $('#wpTextbox1').text().split('\n').join('')
 
           console.log('Analysing record: ' + url)
-          writeStream.write(JSON.stringify(blocksToJSON(getDataPart(carDesc, splits, parts))) + '\n')
+          writeStream.write(JSON.stringify(blocksToJSON(util.getDataPart(carDesc, splits, parts))) + '\n')
 
           callback()
         })
