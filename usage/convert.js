@@ -1,3 +1,12 @@
+/*
+ * 用将十进制数组转为用A-Z表示的二十六进制
+ * Example:
+ *    1  ->  A
+ *   10  ->  J
+ *   26  ->  Z
+ *   77  ->  BY
+ */
+
 function convert (num, start, del) {
   var rest = (num - 1) % del + 1
 
