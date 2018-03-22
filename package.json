@@ -1,0 +1,24 @@
+{
+  "name": "practice",
+  "version": "1.0.0",
+  "description": "For my practice projects about FE skills. :)",
+  "main": "index.js",
+  "scripts": {
+    "push": "node bin/writemd.js && node bin/push.js",
+    "md": "node bin/writemd.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/travisYIN/practice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/travisYIN/practice/issues"
+  },
+  "homepage": "https://github.com/travisYIN/practice#readme",
+  "dependencies": {
+    "ora": "^2.0.0",
+    "shelljs": "^0.8.1"
+  }
+}
