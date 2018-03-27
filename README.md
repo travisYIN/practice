@@ -33,5 +33,6 @@ For my practice projects about FE skills. :)
 - usage
     - array.js
     - convert.js
+    - operator.js
     - pipeline.js
     - triangle.js
