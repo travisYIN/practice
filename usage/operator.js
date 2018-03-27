@@ -1,24 +1,33 @@
 /*
- * 在1-9的数字间填充三种运算符
- * 每种运算符只能最多填充三次
- * 最后的结果需要得出100
+ * 在连续的正整数N1...N2间填充给定的基础运算符或空白
+ * 每种运算符只能最多填充M次
+ * 得到给定的运算结果X
+ * 有几种解法？
  */
 
-let operator = [0,0,0,0] // 记录加减乘除使用的个数
-const NUMS = [1,2,3,4,5,6,7,8,9]
-const OPERATOR = ['+', '-', '*']
+const N1 = 1
+const N2 = 9
+const OPERATOR = ['+', '-', '*', '']
+const M = 3
+const X = 100
+
+const NUMS = getZeroToNum(N2).slice(N1, N2 + 1)
+const OPERATOR_NUM_LIMIT = M
+const RESULT = X
 const EVAL_ELE = {
-	str: '1',
+	str: NUMS[0],
 	plus: 0,
 	minus: 0,
 	mul: 0,
 	total: 0
 }
-const RESULT = 100
-const OPERATOR_NUM_LIMIT = 3
 
 let evalArr = []
 let resultArr = []
+
+function getZeroToNum(N) {
+	return [...Array(N + 1).keys()]
+}
 
 function getEvalChange(el, operator) {
 	switch (operator) {
@@ -43,6 +52,12 @@ function getEvalChange(el, operator) {
 				total: el.total + 1
 			}
 			break
+		case '':
+			return {
+				str: el.str + operator + NUMS[el.total + 1],
+				total: el.total + 1
+			}
+			break
 		default:
 			break
 	}
@@ -60,8 +75,6 @@ OPERATOR.forEach(v => {
 while (evalArr.length) {
 	let nowEl = evalArr.shift()
 
-	console.log(nowEl)
-
 	if (nowEl.total === NUMS.length - 1) {
 		eval(nowEl.str) === RESULT && resultArr.push(nowEl.str)
 	} else {
@@ -74,8 +87,5 @@ while (evalArr.length) {
 	}
 }
 
-console.log('------------------ANSWER------------------')
+console.log(`------------------ANSWER: ${RESULT}------------------`)
 console.log(resultArr)
-
-console.log('------------------！BUT！------------------')
-console.log('123-45-67+89=100')
