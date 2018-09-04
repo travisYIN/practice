@@ -8,9 +8,8 @@
  * var money = 34782632
  * 使得调用money.formatNum()，输出"34,782,632"
  */
-var money = 34782632
 
-Number.prototype.formatNum = function () {
+Number.prototype.formatNum1 = function () {
     let result = []
     let money = "" + this
 
@@ -24,7 +23,56 @@ Number.prototype.formatNum = function () {
     return result.reverse().join('')
 }
 
-console.log(money.formatNum())
+Number.prototype.formatNum2 = function () {
+    money = this.toString()
+
+    var startCharsLen = money.length % 3
+    var startChars = money.slice(0, startCharsLen).match(/\d+/) || []
+    var match = money.slice(startCharsLen).match(/\d{3}/g) || []
+
+    var res = [...startChars, ...match]
+
+    return res.join(',')
+}
+
+Number.prototype.formatNum3 = function() {
+    var money = this.toString()
+    var res = []
+    var mod
+
+    while (money / 1000 >= 1) {
+        mod = money % 1000 + ''
+
+        res.push('00'.slice(0, 3 - mod.length) + mod)
+
+        money = Math.floor(money / 1000)
+    }
+
+    res.push(money)
+
+    return res.reverse().join(',')
+}
+
+var money1 = 0
+var money2 = 123
+var money3 = 1000
+var money4 = 456789
+var money5 = 30000000
+console.log(money1.formatNum1())
+console.log(money1.formatNum2())
+console.log(money1.formatNum3())
+console.log(money2.formatNum1())
+console.log(money2.formatNum2())
+console.log(money2.formatNum3())
+console.log(money3.formatNum1())
+console.log(money3.formatNum2())
+console.log(money3.formatNum3())
+console.log(money4.formatNum1())
+console.log(money4.formatNum2())
+console.log(money4.formatNum3())
+console.log(money5.formatNum1())
+console.log(money5.formatNum2())
+console.log(money5.formatNum3())
 
 /*
  * 第二题：实现函数f
